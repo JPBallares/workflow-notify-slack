@@ -24,7 +24,42 @@ jobs:
       - name: Send slack notification
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
-          MESSAGE: "{ 'text': 'GitHub workflow failed. <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>' }"
+          BRANCH: ${{ github.ref }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
         if: failure()
         run: |
+          MESSAGE="
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": ":red_circle: *GitHub Workflow Failed*"
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Repository:*\n${REPOSITORY}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Branch:*\n${BRANCH}"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "<https://github.com/${REPOSITORY}/actions/runs/${RUN_ID}|View Details>"
+                }
+              }
+            ]
+          }
+          "
           curl -X POST -H 'Content-type: application/json' --data "$MESSAGE" $WEBHOOK_URL
