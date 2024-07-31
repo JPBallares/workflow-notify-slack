@@ -22,10 +22,9 @@ jobs:
           exit 1 # sumulate a failure
 
       - name: Send slack notification
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          MESSAGE: "{ 'text': 'GitHub workflow failed. <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>' }"
         if: failure()
         run: |
-          WEBHOOK_URL="https://hooks.slack.com/services/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"
-          MESSAGE="
-          {
-            'text': 'GitHub workflow failed. <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>'
-          }"
+          curl -X POST -H 'Content-type: application/json' --data "$MESSAGE" $WEBHOOK_URL
