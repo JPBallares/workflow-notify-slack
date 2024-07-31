@@ -1,0 +1,31 @@
+name: CI Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run tests
+        run: |
+          echo "Running tests..."
+          exit 1 # sumulate a failure
+
+      - name: Send slack notification
+        if: failure()
+        run: |
+          WEBHOOK_URL="https://hooks.slack.com/services/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"
+          MESSAGE="
+          {
+            'text': 'GitHub workflow failed. <https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|View Details>'
+          }"
