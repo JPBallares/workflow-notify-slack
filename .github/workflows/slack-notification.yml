@@ -28,7 +28,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         if: failure()
         run: |
-          ./send_slack_notificaton.sh $WEBHOOK_URL $REPOSITORY $BRANCH $RUN_ID "Failed"
+          ./send_slack_notification.sh $WEBHOOK_URL $REPOSITORY $BRANCH $RUN_ID "Failed"
 
       - name: Send slack notification on success
         env:
@@ -38,4 +38,4 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         if: success()
         run: |
-          ./send_slack_notificaton.sh $WEBHOOK_URL $REPOSITORY $BRANCH $RUN_ID "Success"
+          ./send_slack_notification.sh $WEBHOOK_URL $REPOSITORY $BRANCH $RUN_ID "Success"
