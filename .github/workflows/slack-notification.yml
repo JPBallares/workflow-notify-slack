@@ -28,41 +28,7 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         if: failure()
         run: |
-          MESSAGE=$(cat <<EOF
-          {
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": ":red_circle: *GitHub Workflow Failed*"
-                }
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Repository:*\n${REPOSITORY}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Branch:*\n${BRANCH}"
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "<https://github.com/${REPOSITORY}/actions/runs/${RUN_ID}|View Details>"
-                }
-              }
-            ]
-          }
-          EOF
-          )
-          curl -X POST -H 'Content-type: application/json' --data "$MESSAGE" $WEBHOOK_URL
+          ./send_slack_notificaton.sh $WEBHOOK_URL $REPOSITORY $BRANCH $RUN_ID "Failed"
 
       - name: Send slack notification on success
         env:
@@ -72,38 +38,4 @@ jobs:
           RUN_ID: ${{ github.run_id }}
         if: success()
         run: |
-          MESSAGE=$(cat <<EOF
-          {
-            "blocks": [
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": ":white_check_mark: *GitHub Workflow Succeded*"
-                }
-              },
-              {
-                "type": "section",
-                "fields": [
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Repository:*\n${REPOSITORY}"
-                  },
-                  {
-                    "type": "mrkdwn",
-                    "text": "*Branch:*\n${BRANCH}"
-                  }
-                ]
-              },
-              {
-                "type": "section",
-                "text": {
-                  "type": "mrkdwn",
-                  "text": "<https://github.com/${REPOSITORY}/actions/runs/${RUN_ID}|View Details>"
-                }
-              }
-            ]
-          }
-          EOF
-          )
-          curl -X POST -H 'Content-type: application/json' --data "$MESSAGE" $WEBHOOK_URL
+          ./send_slack_notificaton.sh $WEBHOOK_URL $REPOSITORY $BRANCH $RUN_ID "Success"
