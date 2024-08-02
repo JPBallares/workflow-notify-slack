@@ -18,8 +18,7 @@ jobs:
 
       - name: Run tests
         run: |
-          echo "Running tests..."
-          exit 1 # sumulate a failure
+          ./run.sh
 
       - name: Send slack notification on failure
         env:
