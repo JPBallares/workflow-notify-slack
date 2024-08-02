@@ -79,7 +79,7 @@ jobs:
                 "type": "section",
                 "text": {
                   "type": "mrkdwn",
-                  "text": ":check_mark_button: *GitHub Workflow Succeded*"
+                  "text": ":white_check_mark: *GitHub Workflow Succeded*"
                 }
               },
               {
