@@ -21,7 +21,7 @@ jobs:
           echo "Running tests..."
           exit 1 # sumulate a failure
 
-      - name: Send slack notification
+      - name: Send slack notification on failure
         env:
           WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
           BRANCH: ${{ github.ref }}
@@ -37,6 +37,50 @@ jobs:
                 "text": {
                   "type": "mrkdwn",
                   "text": ":red_circle: *GitHub Workflow Failed*"
+                }
+              },
+              {
+                "type": "section",
+                "fields": [
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Repository:*\n${REPOSITORY}"
+                  },
+                  {
+                    "type": "mrkdwn",
+                    "text": "*Branch:*\n${BRANCH}"
+                  }
+                ]
+              },
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": "<https://github.com/${REPOSITORY}/actions/runs/${RUN_ID}|View Details>"
+                }
+              }
+            ]
+          }
+          EOF
+          )
+          curl -X POST -H 'Content-type: application/json' --data "$MESSAGE" $WEBHOOK_URL
+
+      - name: Send slack notification on success
+        env:
+          WEBHOOK_URL: ${{ secrets.WEBHOOK_URL }}
+          BRANCH: ${{ github.ref }}
+          REPOSITORY: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        if: success()
+        run: |
+          MESSAGE=$(cat <<EOF
+          {
+            "blocks": [
+              {
+                "type": "section",
+                "text": {
+                  "type": "mrkdwn",
+                  "text": ":green_circle: *GitHub Workflow Succeded*"
                 }
               },
               {
