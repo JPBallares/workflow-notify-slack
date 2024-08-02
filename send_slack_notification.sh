@@ -14,7 +14,7 @@ RUN_ID=$4
 STATUS=$5
 ICON=":white_check_mark:"
 
-if [ $STATUS -e "Failed" ]; then
+if [ $STATUS == "Failed" ]; then
     ICON=":red_circle:"
 fi
 
