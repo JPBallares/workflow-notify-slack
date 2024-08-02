@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Check if the correct number of arguments is provided
-if [ $# -ne 4 ]; then
+if [ $# -ne 5 ]; then
   echo "Usage: $0 <SLACK_WEBHOOK_URL> <REPOSITORY> <BRANCH> <RUN_ID> <STATUS>"
   exit 1
 fi
